@@ -1,7 +1,7 @@
 {
   "format": "securecode-vectors",
   "version": 1,
-  "generated_at": 1793162341,
+  "generated_at": 1793427286,
   "notes": "Byte-exact conformance vectors for all SecureCode client SDKs. Every SDK ships a self-test that consumes this file (see sdks/README.md). fingerprint.code uses 4x4 grouping; serials use 5-char groups.",
   "base32": [
     {

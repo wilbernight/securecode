@@ -19,6 +19,7 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QGuiApplication
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QCheckBox,
     QComboBox,
     QDialog,
     QFileDialog,
@@ -137,6 +138,56 @@ class SerialDetailDialog(QDialog):
         layout.addLayout(buttons)
 
 
+class EditCustomerDialog(QDialog):
+    """Rename a serial record — optionally re-signing the serial.
+
+    The customer name lives in two places: the (encrypted) DB row and the
+    Ed25519-signed payload inside the serial the customer holds. Renaming
+    the record fixes the admin's bookkeeping; re-issuing additionally
+    bakes the new name into a fresh serial the customer must re-activate
+    with (expiry, machine binding and flags are preserved).
+    """
+
+    def __init__(self, record, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle(tr("Edit customer name"))
+        self.setMinimumWidth(520)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 22, 24, 20)
+        layout.setSpacing(14)
+
+        layout.addWidget(card_header(
+            "user", record.customer or tr("(unnamed)"),
+            f"#{record.id} · {record.fingerprint_code}"))
+
+        caption = QLabel(tr("Customer name"))
+        caption.setProperty("class", "muted")
+        layout.addWidget(caption)
+        self.name_edit = QLineEdit(record.customer)
+        self.name_edit.setObjectName("nameEdit")
+        self.name_edit.selectAll()
+        layout.addWidget(self.name_edit)
+
+        self.reissue = QCheckBox(tr(
+            "Re-issue the serial with the new name"))
+        layout.addWidget(self.reissue)
+
+        hint = QLabel(tr(
+            "Without re-issuing, only your records change — the name shown "
+            "inside the customer's app keeps the old value. Re-issuing keeps "
+            "the same expiry and machine binding, and puts the new serial in "
+            "your clipboard."))
+        hint.setProperty("class", "muted")
+        hint.setWordWrap(True)
+        layout.addWidget(hint)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        buttons.addWidget(button("Close", "secondary", None, None, self.reject))
+        buttons.addWidget(button("Save", None, "check", None, self.accept))
+        layout.addLayout(buttons)
+
+
 class ManagerPage(Page):
     """Serial table + toolbar + row actions."""
 
@@ -225,6 +276,9 @@ class ManagerPage(Page):
              "Re-sign the serial with a new validity period (same machine binding)."),
             ("Transfer permit…", "secondary", "transfer", self._transfer_permit,
              "Issue the signed permit that removes the license from the OLD machine."),
+            ("Edit name…", "secondary", "user", self._edit_customer,
+             "Correct the customer name — optionally re-issue the serial so the "
+             "new name shows inside the customer's app."),
             ("Copy serial", "secondary", "copy", self._copy_serial,
              "Copy the selected record's serial key."),
             ("Export .lic", "secondary", "download", self._export_serial,
@@ -432,6 +486,51 @@ class ManagerPage(Page):
                      self._schedule_reload()),
                  busy_text="Re-signing…")
 
+    def _edit_customer(self) -> None:
+        """Correct the customer name of the selected record.
+
+        DB-only fix by default; with the re-issue checkbox the serial is
+        re-signed with the new name (same expiry, machine binding, flags
+        and tolerance) and copied to the clipboard for delivery.
+        """
+        record = self._selected_record()
+        if record is None:
+            return
+        dialog = EditCustomerDialog(record, self)
+        if dialog.exec() != QDialog.Accepted:
+            return
+        new_name = dialog.name_edit.text().strip()
+        reissue = dialog.reissue.isChecked()
+
+        def _work() -> str | None:
+            self.services.db.update_customer(record.id, new_name)
+            if not reissue:
+                return None
+            request = SerialRequest(
+                customer=new_name,
+                fingerprint=record.fingerprint_code,
+                product_id=record.product_id,
+                expires_at=record.expires_at,  # 0 keeps lifetime; ts keeps date
+                feature_flags=record.flags,
+                tolerance=record.tolerance,
+                rollback_allowance=record.rollback_allowance,
+            )
+            issued = issue_serial(request, self.services.keystore.sign)
+            self.services.db.replace_serial(record.id, issued.serial, issued.payload)
+            return issued.serial
+
+        def _done(serial: str | None) -> None:
+            if serial:
+                QGuiApplication.clipboard().setText(serial)
+                self.services.toast.show(
+                    "success", tr("Name updated"),
+                    tr("The re-signed serial is in your clipboard — deliver it to the customer."))
+            else:
+                self.services.toast.show("success", tr("Name updated"), "")
+            self._schedule_reload()
+
+        run_task(self, _work, _done, busy_text="Saving…")
+
     def _transfer_permit(self) -> None:
         record = self._selected_record()
         if record is None:
@@ -532,4 +631,4 @@ class ManagerPage(Page):
         run_task(self, _work, _done, busy_text="Signing blacklist…")
 
 
-__all__ = ["ManagerPage", "SerialDetailDialog"]
+__all__ = ["ManagerPage", "SerialDetailDialog", "EditCustomerDialog"]

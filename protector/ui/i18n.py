@@ -274,6 +274,22 @@ FA: dict[str, str] = {
     "Remember to export and distribute the updated blacklist.":
         "فراموش نکنید لیست سیاه جدید را خروجی گرفته و توزیع کنید.",
     "Permit saved": "مجوز ذخیره شد",
+    "Edit name…": "ویرایش نام…",
+    "Edit customer name": "ویرایش نام مشتری",
+    "Correct the customer name — optionally re-issue the serial so the new name shows inside the customer's app.":
+        "اصلاح نام مشتری — در صورت تمایل سریال نیز بازصادر می‌شود تا نام جدید داخل برنامهٔ مشتری نمایش داده شود.",
+    "Customer name": "نام مشتری",
+    "Re-issue the serial with the new name": "سریال نیز با نام جدید بازصادر شود",
+    "Without re-issuing, only your records change — the name shown "
+    "inside the customer's app keeps the old value. Re-issuing keeps "
+    "the same expiry and machine binding, and puts the new serial in "
+    "your clipboard.":
+        "بدون بازصادرکردن، فقط سوابق شما اصلاح می‌شود — نامی که داخل برنامهٔ "
+        "مشتری نمایش داده می‌شود همان مقدار قبلی می‌ماند. با بازصادرکردن، "
+        "تاریخ انقضا و قفل ماشین حفظ می‌شود و سریال جدید در کلیپ‌بورد قرار می‌گیرد.",
+    "Save": "ذخیره",
+    "Saving…": "در حال ذخیره…",
+    "Name updated": "نام به‌روزرسانی شد",
     "Deleted": "حذف شد",
     "Exported": "ذخیره شد",
     "Tolerance / rollbacks": "تحمل / عقب‌گرد",

@@ -255,6 +255,24 @@ class LicenseDB:
                 ),
             )
 
+    def update_customer(self, record_id: int, customer: str) -> None:
+        """Correct the customer name of a record (bookkeeping fix).
+
+        This re-encrypts the customer column only — the serial the customer
+        holds keeps the old (signed) name until it is re-issued via
+        ManagerPage._edit_customer() with the re-issue option checked.
+        """
+        with self._lock, self._conn:
+            row = self._conn.execute(
+                "SELECT serial_hash FROM serials WHERE id=?",
+                (record_id,)).fetchone()
+            if row is None:
+                raise DBError(f"record {record_id} not found")
+            self._conn.execute(
+                "UPDATE serials SET customer_enc=?, updated_at=? WHERE id=?",
+                (self._enc(row["serial_hash"], "customer", customer),
+                 int(time.time()), record_id))
+
     def update_notes(self, record_id: int, notes: str) -> None:
         """Update the notes column of a record."""
         with self._lock, self._conn:
