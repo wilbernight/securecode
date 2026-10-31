@@ -1,0 +1,10 @@
+{
+  "format": "securecode-encrypted-container",
+  "version": 1,
+  "kdf": {
+    "name": "pbkdf2-sha256",
+    "iterations": 600000,
+    "salt": "amI6R4cIPwWWTF6r8jRcUQ=="
+  },
+  "data": "WhBCeSzmOwxeARa5vlpQCEATYd65hwvYj4OH9QDxvpK9Mr53eHOJmLqDmfCSb73BtHU7z6LOxdIeLnHLbhJNIW+9JMUXkHtjtn+Wv3gHz7TkKigp7pmyZYGKhk1cZiNRtXFzKwzoFkI7o+J/M++4uHy4w3wpOYNTfJ6jdxxlt/QxOFoPPtsUDtdrn7WNRyhvoc95g2/rkFrndPiRDfNS+WgQNttxtfbEIP5G3bOujMDdyS0MUX9FEa94jNeGsZ+JleP3nddNukBS4vEUmuF87BcN5crEt71Ymvqr+CIPOR/1ZLAs41cnmb9kJJSRBCQlO2YAmC7Ze92jw0PjDfhslXW//KSxmV4b70BkP8I9fcJg+0QDHP1b7PU="
+}

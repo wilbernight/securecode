@@ -1,0 +1,34 @@
+# =============================================================================
+# SecureCode — pinned runtime + build-time dependencies
+# Python 3.11+ · protector: Windows 10/11 + macOS 12+ · client: Windows-only
+# Justification for each entry (project rule: nothing beyond this list).
+# =============================================================================
+
+# --- runtime: both apps (protector on Windows + macOS) -------------------------
+pyside6==6.11.2          # GUI toolkit (Qt6) — verified with this project
+cryptography==50.0.2     # Ed25519 signing/verification + AES-256-GCM + PBKDF2/HKDF
+
+# --- runtime: protected Windows client only (hardware fingerprinting) ----------
+# Windows-only (env markers) — NOT installed on macOS, where the protector
+# needs just the two packages above; the Windows client (target_demo) reads
+# hardware through these. The Android/iOS/macOS SDKs (sdks/) have their own
+# native collectors and no Python dependencies.
+wmi==1.4.9; sys_platform == "win32"
+                         # clean DCOM access to Win32_Processor/BaseBoard/DiskDrive
+                         # (wmic.exe is deprecated/removed on Win11 24H2 — this package
+                         #  is the modern supported path, with a PowerShell CIM
+                         #  fallback implemented in protection/fingerprint.py)
+pywin32==311; sys_platform == "win32"
+                         # COM plumbing required by the wmi package; also used for
+                         # pywintypes security where available
+py-cpuinfo==9.0.0; sys_platform == "win32"
+                         # last-resort CPU component fallback when DCOM+CIM are both
+                         # blocked by AV/kiosk policies (hashed static CPU fields)
+
+# --- build-time only (never shipped inside any binary) --------------------------
+nuitka==4.3.1            # Python -> C -> native machine code compiler.
+                         # THE core protection layer: no .pyc exists in the output,
+                         # killing the pyinstxtractor/uncompyle6/pycdc chain.
+                         # Builds on Windows (build_protector.py) and macOS
+                         # (build_protector.sh).
+zstandard==0.25.0        # recommended by Nuitka for onefile compression

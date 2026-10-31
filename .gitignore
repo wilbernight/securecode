@@ -1,0 +1,46 @@
+# =============================================================================
+# SecureCode — .gitignore
+# Source + docs + demo assets are tracked; build outputs & OS junk are not.
+# =============================================================================
+
+# --- build outputs (never ship binaries through git) --------------------------
+dist/
+build/
+*.build/
+*.dist/
+*.onefile-build/
+*.egg-info/
+out/
+
+# --- archives / local snapshots (kept on disk, not in git) --------------------
+*.rar
+*.7z
+# note: AppIcon_AllSizes.zip is intentionally tracked (icon source assets)
+
+# --- Python caches & tooling --------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# --- runtime-generated state (created by the apps on first launch) ------------
+*.log
+logs/
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# --- OS / editor junk ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/

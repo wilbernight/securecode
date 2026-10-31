@@ -1,0 +1,335 @@
+{
+  "format": "securecode-vectors",
+  "version": 1,
+  "generated_at": 1793162341,
+  "notes": "Byte-exact conformance vectors for all SecureCode client SDKs. Every SDK ships a self-test that consumes this file (see sdks/README.md). fingerprint.code uses 4x4 grouping; serials use 5-char groups.",
+  "base32": [
+    {
+      "hex": "",
+      "text": ""
+    },
+    {
+      "hex": "00",
+      "text": "AA"
+    },
+    {
+      "hex": "ffffffffffffffffffff",
+      "text": "7777777777777777"
+    },
+    {
+      "hex": "536563757265436f64652d76312e302f66702d73616c74",
+      "text": "KNSWG5LSMVBW6ZDFFV3DCLRQF5THALLTMFWHI"
+    },
+    {
+      "hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "text": "AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPQ"
+    },
+    {
+      "hex": "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67",
+      "text": "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO"
+    },
+    {
+      "hex": "6c6963656e73652e646174",
+      "text": "NRUWGZLOONSS4ZDBOQ",
+      "repaired": "l1cense.dat"
+    }
+  ],
+  "fingerprint": [
+    {
+      "components": {
+        "cpu": "BFEBFBFF000906EA",
+        "board": "M80-5A",
+        "disk": "S6XPNZ0R",
+        "guid": "d4f9b6e2-4a8f-4f0f-9d8b-1a2b3c4d5e6f"
+      },
+      "mask": 15,
+      "material_hex": "0f5792b37f2de20893b1",
+      "code": "B5LZ-FM37-FXRA-RE5R"
+    },
+    {
+      "components": {
+        "cpu": null,
+        "board": "M80-5A",
+        "disk": null,
+        "guid": "d4f9b6e2-..."
+      },
+      "mask": 10,
+      "material_hex": "0a734b7f8a0b49d2fa83",
+      "code": "BJZU-W74K-BNE5-F6UD"
+    },
+    {
+      "components": {
+        "cpu": "  BFEBFBFF000906EA  \u0000 ",
+        "board": "m80-5a",
+        "disk": "S6XPNZ0R",
+        "guid": "D4F9B6E2-4A8F-4F0F-9D8B-1A2B3C4D5E6F"
+      },
+      "mask": 15,
+      "material_hex": "0f5792b37f2de20893b1",
+      "code": "B5LZ-FM37-FXRA-RE5R"
+    },
+    {
+      "components": {
+        "cpu": "آزمون-سخت-افزار-۱",
+        "board": "بردة-مادر",
+        "disk": "دیسک",
+        "guid": "گویید"
+      },
+      "mask": 15,
+      "material_hex": "0f95349fdbfd76e89671",
+      "code": "B6KT-JH63-7V3O-RFTR"
+    },
+    {
+      "components": {
+        "cpu": "widevine:6vN0bWFgSC1ndW1t",
+        "board": "18f7a2bc9d34e5f0",
+        "disk": null,
+        "guid": null
+      },
+      "mask": 3,
+      "material_hex": "03659f181631b56fe5d8",
+      "code": "ANSZ-6GAW-GG2W-7ZOY"
+    },
+    {
+      "components": {
+        "cpu": "widevine:6vN0bWFgSC1ndW1t",
+        "board": "18f7a2bc9d34e5f0",
+        "disk": "keystore:9f:aa:03:cb",
+        "guid": null
+      },
+      "mask": 7,
+      "material_hex": "076dfdc7d4e4a7b0761d",
+      "code": "A5W7-3R6U-4ST3-A5Q5"
+    },
+    {
+      "components": {
+        "cpu": "keychain:4711beef-dead",
+        "board": "idfv:8C123...",
+        "disk": null,
+        "guid": null
+      },
+      "mask": 3,
+      "material_hex": "0365a2de472a2dccb342",
+      "code": "ANS2-FXSH-FIW4-ZM2C"
+    },
+    {
+      "components": {
+        "cpu": "en0:a4:83:e7:11:22:33",
+        "board": "C02X1234ABCD",
+        "disk": null,
+        "guid": "3A6B1F9E-2C4D-4E5F-9A0B-7C8D9E0F1A2B"
+      },
+      "mask": 11,
+      "material_hex": "0b2e81c22967a73cfa9e",
+      "code": "BMXI-DQRJ-M6TT-Z6U6"
+    }
+  ],
+  "canonical_json": [
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 1803542400,
+        "cust": "E2E Test Corp",
+        "n": "00112233445566778899aabbccddeeff",
+        "fl": {
+          "core": true
+        },
+        "tol": 1,
+        "rb": 3
+      },
+      "canonical_hex": "7b2263757374223a22453245205465737420436f7270222c22657870223a313830333534323430302c22666c223a7b22636f7265223a747275657d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a223030313132323333343435353636373738383939616162626363646465656666222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a332c22746f6c223a312c2276223a317d"
+    },
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 0,
+        "cust": "",
+        "n": "",
+        "fl": {},
+        "tol": 1,
+        "rb": 3
+      },
+      "canonical_hex": "7b2263757374223a22222c22657870223a302c22666c223a7b7d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a22222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a332c22746f6c223a312c2276223a317d"
+    },
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 1803542400,
+        "cust": "شرکت \"نمونه\"\n\\tab￿\u001f",
+        "n": "ffeeddccbbaa99887766554433221100",
+        "fl": {
+          "م导读": false,
+          "z_last": true,
+          "a_first": true,
+          "emoji😀": true
+        },
+        "tol": 2,
+        "rb": 0
+      },
+      "canonical_hex": "7b2263757374223a225c75303633345c75303633315c75303661395c7530363261205c225c75303634365c75303634355c75303634385c75303634365c75303634375c225c6e5c5c7461625c75666666665c75303031665c7530303766222c22657870223a313830333534323430302c22666c223a7b22615f6669727374223a747275652c22656d6f6a695c75643833645c7564653030223a747275652c227a5f6c617374223a747275652c225c75303634355c75356266635c7538626662223a66616c73657d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a226666656564646363626261613939383837373636353534343333323231313030222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a302c22746f6c223a322c2276223a317d"
+    }
+  ],
+  "serial": [
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 1803542400,
+        "cust": "E2E Test Corp",
+        "n": "00112233445566778899aabbccddeeff",
+        "fl": {
+          "core": true
+        },
+        "tol": 1,
+        "rb": 3
+      },
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "body_hex": "7b2263757374223a22453245205465737420436f7270222c22657870223a313830333534323430302c22666c223a7b22636f7265223a747275657d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a223030313132323333343435353636373738383939616162626363646465656666222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a332c22746f6c223a312c2276223a317d",
+      "serial": "PMRGG-5LTOQ-RDUIS-FGJCS-AVDFO-N2CAQ-3POJY-CELBC-MV4HA-IR2GE-4DAMZ-VGQZD-IMBQF-QRGM3-BCHJ5-SEY3P-OJSSE-OTUOJ-2WK7J-MEJTH-AIR2E-JAUEM-RTGQ2-TMN2D-IRCUM-R2IJF-FCELB-CNFQX-IIR2G-E3TOM-BQGAY-DAMBQ-FQRG4-IR2EI-YDAMJ-RGIZD-GMZUG-Q2TKN-RWG43-TQOBZ-HFQWC-YTCMN-RWIZD-FMVTG-MIRME-JYGSZ-BCHIR-DOZJZ-ME3GG-ZLDFV-RTCOB-VFU2D-KYTCF-VQTEZ-TCFVS-DGMLF-HE3DI-OBUMY-3WKIR-MEJZG-EIR2G-MWCE5-DPNQR-DUMJM-EJ3CE-ORRPV-ORCTR-55J3Q-KS4NO-6UDIM-DX5A2-B7SSA-AR4XL-L3LDK-4E3JV-QFWNZ-RDVD6-4Q6HO-II3AO-3X4L4-CRE65-CH4L7-GT2P4-OZDAP-3MZMO-S5EEW-YD"
+    },
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 0,
+        "cust": "",
+        "n": "",
+        "fl": {},
+        "tol": 1,
+        "rb": 3
+      },
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "body_hex": "7b2263757374223a22222c22657870223a302c22666c223a7b7d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a22222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a332c22746f6c223a312c2276223a317d",
+      "serial": "PMRGG-5LTOQ-RDUIR-CFQRG-K6DQE-I5DAL-BCMZW-CEOT3-PUWCE-ZTQEI-5CEQK-CGIZT-INJWG-5BUIR-KGI5E-ESSRC-FQRGS-YLUEI-5DCNZ-XGAYD-AMBQG-AYCYI-TOEI5-CEIRM-EJYGS-ZBCHI-RDOZJ-ZME3G-GZLDF-VRTCO-BVFU2-DKYTC-FVQTE-ZTCFV-SDGML-FHE3D-IOBUM-Y3WKI-RMEJZ-GEIR2-GMWCE-5DPNQ-RDUMJ-MEJ3C-EORRP-XJNLO-2NE2E-QEI3L-3XMAH-LEL6M-JD6WQ-Y6HHY-7H2GC-PKJKJ-KGV3J-NAJUB-E66LU-IP3GQ-PCSI3-WTWYZ-HRFZS-UR3SF-SGLGL-DAK5D-74YNV-VAM"
+    },
+    {
+      "payload": {
+        "v": 1,
+        "fp": "AB234567CDEFGHIJ",
+        "pid": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+        "iat": 1770000000,
+        "exp": 1803542400,
+        "cust": "شرکت \"نمونه\"\n\\tab￿\u001f",
+        "n": "ffeeddccbbaa99887766554433221100",
+        "fl": {
+          "م导读": false,
+          "z_last": true,
+          "a_first": true,
+          "emoji😀": true
+        },
+        "tol": 2,
+        "rb": 0
+      },
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "body_hex": "7b2263757374223a225c75303633345c75303633315c75303661395c7530363261205c225c75303634365c75303634355c75303634385c75303634365c75303634375c225c6e5c5c7461625c75666666665c75303031665c7530303766222c22657870223a313830333534323430302c22666c223a7b22615f6669727374223a747275652c22656d6f6a695c75643833645c7564653030223a747275652c227a5f6c617374223a747275652c225c75303634355c75356266635c7538626662223a66616c73657d2c226670223a224142323334353637434445464748494a222c22696174223a313737303030303030302c226e223a226666656564646363626261613939383837373636353534343333323231313030222c22706964223a2237653961366365632d633138352d343562622d613266622d643331653936343834663765222c227262223a302c22746f6c223a322c2276223a317d",
+      "serial": "PMRGG-5LTOQ-RDUIS-4OUYD-MMZUL-R2TAN-RTGFO-HKMBW-ME4VY-5JQGY-ZGCIC-4EJOH-KMBWG-Q3FY5-JQGY2-DKXDV-GA3DI-OC4OU-YDMNB-WLR2T-ANRUG-5OCEX-DOLRO-HIYLC-LR2WM-ZTGMZ-OHKMB-QGFTF-Y5JQG-A3WMI-RMEJS-XQ4BC-HIYTQ-MBTGU-2DENB-QGAWC-EZTME-I5HWI-TBL5T-GS4TT-OQRDU-5DSOV-SSYIT-FNVXW-U2K4O-VSDQM-3ELR2-WIZJQ-GARDU-5DSOV-SSYIT-2L5WG-C43UE-I5HI4-TVMUW-CEXDV-GA3DI-NK4OU-2WEZT-DLR2T-QYTGM-IRDUZ-TBNRZ-WK7JM-EJTHA-IR2EJ-AUEMR-TGQ2T-MN2DI-RCUMR-2IJFF-CELBC-NFQXI-IR2GE-3TOMB-QGAYD-AMBQF-QRG4I-R2EJT-GMZLF-MRSGG-Y3CMJ-QWCOJ-ZHA4D-ONZWG-Y2TKN-BUGMZ-TEMRR-GEYDA-IRMEJ-YGSZB-CHIRD-OZJZM-E3GGZ-LDFVR-TCOBV-FU2DK-YTCFV-QTEZT-CFVSD-GMLFH-E3DIO-BUMY3-WKIRM-EJZGE-IR2GA-WCE5D-PNQRD-UMRME-J3CEO-RRPU5-Y25FI-LCDKM-FSJUP-TCADM-QDHBO-EVBHT-O734M-UECAE-QMPTE-PR4HM-ZOXRC-ZSHF6-GOSHL-FTNIS-K3OOD-DM5KV-3I3OW-UTJY7-FRCBH-FPAUQ-G"
+    }
+  ],
+  "ed25519": [
+    {
+      "message_hex": "",
+      "signature_hex": "8e08aaa18ee03ebc0b7ac47d68d1772b5184c60ce91d6006ad299d460b7bfe2f0820ef56402554962816130dbef51eb64ee730a77157189ad2b47c6b77cb780a",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": true
+    },
+    {
+      "message_hex": "00",
+      "signature_hex": "8e08aaa18ee03ebc0b7ac47d68d1772b5184c60ce91d6006ad299d460b7bfe2f0820ef56402554962816130dbef51eb64ee730a77157189ad2b47c6b77cb780a",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": false
+    },
+    {
+      "message_hex": "61747461636b206174206461776e",
+      "signature_hex": "672a8a571b57333a9374e7f4340368dc2c80e0aa08fcd977cda5b95c015dd0d228963a8af1aea2caa2bf7d46c2fbdbeae0669fb1f54d4f57c34bdd543a7caf02",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": true
+    },
+    {
+      "message_hex": "60747461636b206174206461776e",
+      "signature_hex": "672a8a571b57333a9374e7f4340368dc2c80e0aa08fcd977cda5b95c015dd0d228963a8af1aea2caa2bf7d46c2fbdbeae0669fb1f54d4f57c34bdd543a7caf02",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": false
+    },
+    {
+      "message_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+      "signature_hex": "4c0ff4583ec82a8146a7f1daba75fa6b3fb86dc21d38589952011f16ba69473cbfca642c59d638cc15f8ecfb3c964e2742e72e41b8b469351af00a9edcaaa701",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": true
+    },
+    {
+      "message_hex": "010102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+      "signature_hex": "4c0ff4583ec82a8146a7f1daba75fa6b3fb86dc21d38589952011f16ba69473cbfca642c59d638cc15f8ecfb3c964e2742e72e41b8b469351af00a9edcaaa701",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": false
+    },
+    {
+      "message_hex": "d8aad8a3db8cdb8cd8af",
+      "signature_hex": "b0408c4c1e0431edf2464d4bccfc37429117067722ac3b15103d583c5ecd9baada7d1160348be159b0d603a3d261e4281611131723c1e36ae2f8bcb3c08fd602",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": true
+    },
+    {
+      "message_hex": "d9aad8a3db8cdb8cd8af",
+      "signature_hex": "b0408c4c1e0431edf2464d4bccfc37429117067722ac3b15103d583c5ecd9baada7d1160348be159b0d603a3d261e4281611131723c1e36ae2f8bcb3c08fd602",
+      "public_key_hex": "dcb2c1a8a2ecf13907613e0263d62ac382e331caec10587a21d29785a4014a5b",
+      "valid": false
+    }
+  ],
+  "hkdf": [
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "license-file-v1",
+      "key_hex": "2c02864ca1930e72542f2afa73061495a28be7ef6fed3f4c361fa8eb1246baab"
+    },
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "clock-store-v1",
+      "key_hex": "798b4e254e7f79da60052ad918397934bb129c514f4385d408ae35a842007a06"
+    },
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "keystore-v1",
+      "key_hex": "473d63a6cfb17d02688f0eefb8d1f07cc198393aae68dc6d9e5d917182fbe84e"
+    },
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "license-file-v1",
+      "key_hex": "2c02864ca1930e72542f2afa73061495a28be7ef6fed3f4c361fa8eb1246baab"
+    },
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "clock-store-v1",
+      "key_hex": "798b4e254e7f79da60052ad918397934bb129c514f4385d408ae35a842007a06"
+    },
+    {
+      "master": "SC-VECTOR-MASTER-2026",
+      "machine_code": "AB234567CDEFGHIJ",
+      "product_id": "7e9a6cec-c185-45bb-a2fb-d31e96484f7e",
+      "context": "keystore-v1",
+      "key_hex": "473d63a6cfb17d02688f0eefb8d1f07cc198393aae68dc6d9e5d917182fbe84e"
+    }
+  ]
+}
