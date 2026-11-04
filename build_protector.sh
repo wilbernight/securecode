@@ -42,7 +42,9 @@ echo "[1/4] building protector with Nuitka (this can take several minutes)..."
 #   * --disable-ccache: Nuitka auto-downloads an x86_64 ccache that fails to
 #     invoke the arm64 `xcrun` on Apple Silicon ("missing compatible
 #     architecture ... need x86_64"). Skipping ccache uses clang directly.
-#   * --macos-app-icon=none: silence the missing-icon warning (no icon shipped).
+#   * --macos-app-icon: the shield app icon (protector/assets/AppIcon.icns,
+#     extracted from AppIcon_AllSizes.zip). Without it the bundle has no
+#     Contents/Resources icon and Finder/Dock show a blank generic app.
 python3 -m nuitka \
   --assume-yes-for-downloads \
   --disable-ccache \
@@ -50,7 +52,7 @@ python3 -m nuitka \
   --macos-create-app-bundle \
   --enable-plugin=pyside6 \
   --macos-app-name="SecureCode Protector" \
-  --macos-app-icon=none \
+  --macos-app-icon=protector/assets/AppIcon.icns \
   --include-package=protector \
   --nofollow-import-to=protector.tools \
   --include-package=shared \
@@ -63,6 +65,9 @@ python3 -m nuitka \
 echo "[2/4] naming the bundle (Nuitka names it after main.py -> main.app)..."
 rm -rf "$APP"
 mv "dist/main.app" "$APP"
+if [ ! -f "$APP/Contents/Resources/AppIcon.icns" ] && ! ls "$APP/Contents/Resources/"*.icns >/dev/null 2>&1; then
+    echo "      [warn] no .icns in the bundle — the app will show a generic icon"
+fi
 
 echo "[3/4] ad-hoc code signing (lets the local build launch through Gatekeeper)..."
 if codesign --force --deep --sign - "$APP" 2>/dev/null; then

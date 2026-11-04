@@ -69,8 +69,10 @@ class Sandbox:
         shutil.rmtree(self.root, ignore_errors=True)
         # Remove the HKCU clock-store value this test may have created.
         try:
-            import winreg
-
+            import winreg  # Windows only; absent on macOS/Linux
+        except ImportError:
+            return
+        try:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
                                 r"Software\SecureCode\SecureNotepad", 0,
                                 winreg.KEY_ALL_ACCESS) as key:
@@ -253,17 +255,50 @@ def main() -> int:
         result = client.activate(issued.serial)
         check("re-activation after reset", result.ok, result.message)
 
-        blacklist_text = build_blacklist([issued.payload.nonce], signer)
-        config.blacklist_path().write_text(blacklist_text, encoding="utf-8")
-        status = client.verify_installed()
-        check("blacklisted serial blocked",
-              status.state is LicenseState.REVOKED, status.message)
-
         # Corrupted blacklist is ignored (never bricks the app).
         config.blacklist_path().write_text("GARBAGE-NOT-A-VALID-ENVELOPE",
                                            encoding="utf-8")
         status = client.verify_installed()
         check("corrupt blacklist ignored", status.state is LicenseState.VALID)
+
+        # Revocation uses a second serial so `issued` stays usable for [7].
+        doomed = issue_serial(SerialRequest(
+            customer="E2E revoked", fingerprint=code, product_id=DEMO_PRODUCT_ID,
+            duration_days=30), signer)
+        result = client.activate(doomed.serial)
+        check("second serial activates", result.ok, result.message)
+        blacklist_text = build_blacklist([doomed.payload.nonce], signer)
+        config.blacklist_path().write_text(blacklist_text, encoding="utf-8")
+        status = client.verify_installed()
+        check("blacklisted serial blocked",
+              status.state is LicenseState.REVOKED, status.message)
+
+        # Sticky: deleting/corrupting the blacklist must NOT un-revoke.
+        config.blacklist_path().unlink(missing_ok=True)
+        status = client.verify_installed()
+        check("revocation survives blacklist deletion",
+              status.state is LicenseState.REVOKED, status.message)
+        config.blacklist_path().write_text("GARBAGE-NOT-A-VALID-ENVELOPE",
+                                           encoding="utf-8")
+        status = client.verify_installed()
+        check("revocation survives corrupt blacklist",
+              status.state is LicenseState.REVOKED, status.message)
+        config.blacklist_path().unlink(missing_ok=True)
+
+        # Wiping license.dat and re-activating the revoked serial is refused.
+        config.license_path().unlink(missing_ok=True)
+        result = client.activate(doomed.serial)
+        check("revoked serial cannot be re-activated",
+              not result.ok and result.state is LicenseState.REVOKED,
+              result.message)
+
+        # A different, non-revoked serial still activates normally.
+        result = client.activate(issued.serial)
+        check("non-revoked serial activates after a revocation", result.ok,
+              result.message)
+        status = client.verify_installed()
+        check("non-revoked serial valid", status.state is LicenseState.VALID,
+              status.message)
 
         # ------------------------------------------------------------------
         # 7) machine transfer (deactivation request -> permit)

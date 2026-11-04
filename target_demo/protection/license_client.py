@@ -74,6 +74,9 @@ from .strings import S
 log = logging.getLogger("protection.license")
 
 _LICENSE_MAGIC = b"SCLIC1"  # format tag inside license.dat (fast sanity check)
+_REVOCATION_MAGIC = b"SCREV1"  # format tag of the sticky revocation store
+_REVOCATION_CONTEXT = "revocation-store-v1"
+_MAX_REVOCATION_BYTES = 4 << 20     # 4 MiB
 _CLOCK_CONTEXT = "clock-store-v1"
 
 #: Size caps before reading local artifacts (resource-exhaustion hardening:
@@ -140,6 +143,7 @@ class _LicenseFile:
     rollbacks: int
     machine_code: str
     blacklist_ver: int = 0
+    revoked: bool = False  # sticky: set once a signed blacklist named this serial
 
 
 class LicenseClient:
@@ -198,6 +202,9 @@ class LicenseClient:
 
     # ================================================================ blacklist
     def _load_blacklist(self) -> set[str]:
+        return self._load_blacklist_with_version()[0]
+
+    def _load_blacklist_with_version(self) -> tuple[set[str], int]:
         """Nonces on the signed revocation blacklist (empty if no file).
 
         The blacklist is an Ed25519-signed envelope distributed by the
@@ -209,21 +216,79 @@ class LicenseClient:
         try:
             if path.stat().st_size > _MAX_BLACKLIST_BYTES:
                 log.warning("blacklist file implausibly large — ignored")
-                return set()
+                return set(), 0
             raw = path.read_bytes()
         except OSError:
-            return set()
+            return set(), 0
         try:
             body, signature = decode_envelope(raw.decode("utf-8", errors="replace"))
             Ed25519PublicKey.from_public_bytes(self._public_key()).verify(
                 signature, body)
             data = json.loads(body.decode("utf-8"))
             if data.get("v") != 1:
-                return set()
-            return {str(n) for n in data.get("revoked", [])}
+                return set(), 0
+            return ({str(n) for n in data.get("revoked", [])},
+                    int(data.get("generated_at", 0) or 0))
         except Exception:
-            log.warning("ignoring unreadable blacklist file at %s", path)
-            return set()
+            log.warning("ignoring unreadable blacklist file")
+            return set(), 0
+
+    # ======================================================= sticky revocation
+    # A signed blacklist is the only way a revocation reaches an offline
+    # client, and the customer controls that file. Once a correctly signed
+    # blacklist has named a serial, the revocation is remembered in two
+    # machine-bound, AES-GCM-authenticated places (the license file itself and
+    # this separate store, kept in both data directories) so that deleting or
+    # swapping blacklist.sec — or deleting license.dat and re-activating the
+    # same serial — does not bring a revoked serial back.
+    def _revocation_paths(self) -> tuple[Path, Path]:
+        return (self._config.program_data_dir() / "state.dat",
+                self._config.local_data_dir() / "cache" / "state.dat")
+
+    def _revocation_key(self) -> bytes:
+        return derive_machine_key(
+            self.machine_code(), self._config.product_id, _REVOCATION_CONTEXT)
+
+    def _load_revoked_store(self) -> set[str]:
+        nonces: set[str] = set()
+        for path in self._revocation_paths():
+            try:
+                blob = _capped_read_bytes(path, _MAX_REVOCATION_BYTES, "state")
+                if not blob.startswith(_REVOCATION_MAGIC):
+                    continue
+                plain = gcm_decrypt(self._revocation_key(),
+                                    blob[len(_REVOCATION_MAGIC):])
+                nonces |= {str(n) for n in json.loads(plain.decode("utf-8"))}
+            except Exception:
+                continue  # missing / foreign / tampered store: ignore that copy
+        return nonces
+
+    def _remember_revoked(self, nonces: set[str]) -> None:
+        if not nonces:
+            return
+        known = self._load_revoked_store()
+        if nonces <= known:
+            return
+        plain = json.dumps(sorted(known | nonces)).encode("utf-8")
+        blob = _REVOCATION_MAGIC + gcm_encrypt(self._revocation_key(), plain)
+        for path in self._revocation_paths():
+            try:
+                ensure_private_dir(path.parent)
+                tmp = path.with_suffix(".tmp")
+                tmp.write_bytes(blob)
+                tmp.replace(path)
+            except OSError:
+                log.debug("revocation store unwritable", exc_info=True)
+
+    def _is_revoked(self, nonce: str) -> tuple[bool, int]:
+        """(revoked?, blacklist generated_at). Records any fresh revocation."""
+        if not nonce:
+            return False, 0
+        listed, version = self._load_blacklist_with_version()
+        if nonce in listed:
+            self._remember_revoked({nonce})
+            return True, version
+        return nonce in self._load_revoked_store(), version
 
     # ================================================================ activation
     def activate(self, serial_text: str) -> ActivationResult:
@@ -254,7 +319,7 @@ class LicenseClient:
         if payload.expires_at != EXP_LIFETIME and now >= payload.expires_at:
             return ActivationResult(False, LicenseState.EXPIRED, S("msg_expired"))
 
-        if payload.nonce and payload.nonce in self._load_blacklist():
+        if self._is_revoked(payload.nonce)[0]:
             return ActivationResult(False, LicenseState.REVOKED, S("msg_revoked"))
 
         self._write_license_file(_LicenseFile(
@@ -267,8 +332,9 @@ class LicenseClient:
         ))
         # Fresh clock watermark for the new license.
         self._clock_guard().reset_stores(self.machine_code(), last_seen=now)
-        log.info("license activated (customer=%s, expires=%s)",
-                 payload.customer or "-", payload.expires_at or "lifetime")
+        # Customer name deliberately NOT logged (personal data; log files are
+        # readable by anyone with access to the user profile).
+        log.info("license activated (expires=%s)", payload.expires_at or "lifetime")
         return ActivationResult(True, LicenseState.VALID, "", payload)
 
     # ================================================================ verification
@@ -319,9 +385,17 @@ class LicenseClient:
             log.warning("clock tampering beyond allowance")
             return LicenseStatus(LicenseState.CLOCK_TAMPERED, S("msg_clock"), payload)
 
-        # 5) Revocation blacklist (re-read every launch).
-        if payload.nonce and payload.nonce in self._load_blacklist():
+        # 5) Revocation: sticky flag in the authenticated license file, the
+        #    sticky revocation store, and the signed blacklist (re-read every
+        #    launch). Deleting blacklist.sec never un-revokes a serial.
+        revoked, bl_version = self._is_revoked(payload.nonce)
+        if revoked or record.revoked:
+            record.revoked = True
+            record.blacklist_ver = max(record.blacklist_ver, bl_version)
+            self._remember_revoked({payload.nonce} if payload.nonce else set())
+            self._write_license_file(record)
             return LicenseStatus(LicenseState.REVOKED, S("msg_revoked"), payload)
+        record.blacklist_ver = max(record.blacklist_ver, bl_version)
 
         # 6) Persist watermark back into the authenticated license file.
         self._write_license_file(record)
@@ -421,6 +495,7 @@ class LicenseClient:
             rollbacks=int(data.get("rollbacks", 0)),
             machine_code=str(data.get("machine_code", "")),
             blacklist_ver=int(data.get("blacklist_ver", 0)),
+            revoked=bool(data.get("revoked", False)),
         )
 
     def _write_license_file(self, record: _LicenseFile) -> None:
@@ -436,12 +511,18 @@ class LicenseClient:
             "rollbacks": record.rollbacks,
             "machine_code": record.machine_code,
             "blacklist_ver": record.blacklist_ver,
+            "revoked": record.revoked,
         }, sort_keys=True).encode("utf-8")
         blob = _LICENSE_MAGIC + gcm_encrypt(self._file_key(), plain)
         path = self._config.license_path()
         tmp = path.with_suffix(".tmp")
         tmp.write_bytes(blob)
         tmp.replace(path)
+        if os.name != "nt":
+            try:
+                os.chmod(path, 0o600)
+            except OSError:
+                pass
         if os.name == "nt":
             # Best-effort ACL hardening of the license file itself.
             import subprocess

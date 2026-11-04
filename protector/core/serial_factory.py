@@ -103,8 +103,10 @@ def issue_serial(request: SerialRequest, signer: Signer) -> IssuedSerial:
     body = payload.canonical_bytes()
     signature = signer(body)
     serial = encode_envelope(body, signature)
-    log.info("issued serial (customer=%s, exp=%s, flags=%d)",
-             request.customer or "-", payload.expires_at or "lifetime",
+    # Customer name is personal data: it is stored encrypted in the license
+    # DB and must not end up in the plaintext log. Log the nonce prefix only.
+    log.info("issued serial (nonce=%s…, exp=%s, flags=%d)",
+             payload.nonce[:8], payload.expires_at or "lifetime",
              len(payload.feature_flags))
     return IssuedSerial(serial=serial, serial_flat=serial.replace("-", ""),
                          payload=payload)

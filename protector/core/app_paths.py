@@ -58,9 +58,29 @@ THEME_SNAPSHOT: Path = REPO_ROOT / "protector" / "assets" / "theme_snapshot.qss"
 
 
 def ensure_dirs() -> None:
-    """Create the state directories if missing."""
+    """Create the state directories if missing and make them owner-only.
+
+    On macOS/Linux the directories are set to 0700 (other local users can't
+    even list them) and the existing state files to 0600. The log file holds
+    metadata (key ids, timestamps) and the DB holds fingerprints/product ids
+    in clear, so neither should be world-readable. Windows relies on the
+    per-user %APPDATA% ACLs.
+    """
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     BASE_DIR.mkdir(parents=True, exist_ok=True)
+    if os.name == "nt":
+        return
+    for directory in (BASE_DIR, LOGS_DIR):
+        try:
+            os.chmod(directory, 0o700)
+        except OSError:
+            pass
+    for path in (KEYSTORE_PATH, DB_PATH, SETTINGS_PATH, *LOGS_DIR.glob("protector.log*")):
+        try:
+            if path.is_file():
+                os.chmod(path, 0o600)
+        except OSError:
+            pass
 
 
 __all__ = [

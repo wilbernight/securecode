@@ -123,6 +123,11 @@ def ensure_private_dir(path: Path) -> None:
     available without running elevated.
     """
     path.mkdir(parents=True, exist_ok=True)
+    if os.name != "nt":
+        try:
+            os.chmod(path, 0o700)  # owner-only on macOS/Linux
+        except OSError:
+            pass
     if os.name == "nt":
         import subprocess
         user = os.environ.get("USERNAME", "")

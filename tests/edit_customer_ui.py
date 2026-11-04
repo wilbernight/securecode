@@ -95,7 +95,10 @@ try:
     deadline = time.time() + 10
     while time.time() < deadline:
         app.processEvents()
-        if (db.get_record(rid).customer == "بازرسی"):
+        rec = db.get_record(rid)
+        # The rename and the re-issued serial land in separate writes; wait
+        # for both, otherwise the test races the worker thread (flaky).
+        if rec.customer == "بازرسی" and rec.serial != "SERIAL-EDIT-TEST-0001":
             break
         time.sleep(0.05)
 finally:

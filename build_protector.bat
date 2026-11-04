@@ -35,7 +35,7 @@ python -m nuitka ^
   --product-version=1.0.0.0 ^
   --file-description="SecureCode Protector - licensing management console" ^
   --copyright="Copyright (c) SecureCode Ltd." ^
-  --windows-icon-from-ico=target_demo\assets\app.ico ^
+  --windows-icon-from-ico=protector\assets\AppIcon.ico ^
   --output-filename=SecureCodeProtector.exe ^
   --include-package=protector ^
   --nofollow-import-to=protector.tools ^
