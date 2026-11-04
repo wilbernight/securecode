@@ -50,7 +50,12 @@
 ### تأیید
 - `e2e_licensing`: **۳۴ قبول، ۰ رد**، با ۶ تست جدید برای ابطال (پاک کردن بلک‌لیست، بلک‌لیست خراب، فعال‌سازی دوباره، و این‌که سریال سالم همچنان فعال شود). سایر تست‌ها (`cross_platform_vectors`، `platform_fingerprint_test`، `jalali_test`، `ui_smoke`، `demo_ui_smoke`، `restore_ux_test`، `workers_thread_test`) همه قبول شدند. `edit_customer_ui` پنج بار پشت سر هم قبول شد.
 
+- ساخت و نصب: `build_protector.sh` با موفقیت اجرا شد. در باندل جدید `Contents/Resources/AppIcon.icns` و `CFBundleIconFile` وجود دارد و امضای ad-hoc هم معتبر است. برنامهٔ جدید در `/Applications` نصب شد و بدون خطا تا پنجرهٔ Unlock بالا آمد. Dock هم ری‌استارت شد تا آیکون تازه شود. نسخهٔ قبلی به‌عنوان بکاپ در scratchpad این جلسه نگه داشته شد: `/private/tmp/claude-501/-Users-ehsanarab-Downloads-checkfiles-securecode--claude-worktrees-laughing-vaughan-41c237/cecdcde6-f599-46d2-bd00-4aed2414e580/scratchpad/SecureCode Protector.old.app`
+- دسترسی‌ها روی داده‌های واقعی شما الان این‌طور است: پوشه‌ها `drwx------` و `keystore.dat`، `licenses.db` و `settings.dat` همه `-rw-------`.
+- کامیت: `d158cf4` روی برنچ `claude/laughing-vaughan-41c237` (هنوز push یا merge نشده).
+
 ## ۶. باقی‌مانده
+- موقع نصب، نسخهٔ قدیمی برنامه باز بود. آن پنجره را ببندید و برنامه را دوباره باز کنید تا نسخهٔ جدید اجرا شود.
 - SDKهای موبایل (`sdks/`) هنوز منطق «ابطال دائمی» را ندارند. این تغییر فقط در کلاینت پایتون است.
 - محدودیت ذاتی ابطال آفلاین: اگر مشتری **قبل از** رسیدن بلک‌لیست همهٔ وضعیت برنامه را پاک کند و بلک‌لیست را هیچ‌وقت نگذارد، ابطال به او نمی‌رسد. بدون سرور، این قابل حل نیست.
 - S4 (کلید دمو در `target_demo`) عمداً تغییر نکرد. قبل از ساخت هر محصول واقعی `protector/tools/export_pubkey_blob.py` را اجرا کنید.
